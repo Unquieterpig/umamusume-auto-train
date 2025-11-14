@@ -6,6 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MOOD } from "@/constants";
+import { fieldCardClass, fieldLabelClass } from "@/components/layout/styles";
 
 type Props = {
   minimumMood: string;
@@ -21,15 +22,15 @@ export default function Mood({
   setMoodJunior,
 }: Props) {
   return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <span className="text-lg font-medium">Min Mood (Junior)</span>
+    <div className="grid gap-4 sm:grid-cols-2">
+      <label className={fieldCardClass}>
+        <span className={fieldLabelClass}>Min Mood (Junior)</span>
         <Select
           name="mood-junior"
           value={minimumMoodJunior}
           onValueChange={(val) => setMoodJunior(val)}
         >
-          <SelectTrigger className="w-36 mt-2">
+          <SelectTrigger className="mt-2 w-full">
             <SelectValue placeholder="Mood" />
           </SelectTrigger>
           <SelectContent>
@@ -40,15 +41,15 @@ export default function Mood({
             ))}
           </SelectContent>
         </Select>
-      </div>
-      <div>
-        <span className="text-lg font-medium">Min Mood</span>
+      </label>
+      <label className={fieldCardClass}>
+        <span className={fieldLabelClass}>Min Mood</span>
         <Select
           name="mood"
           value={minimumMood}
           onValueChange={(val) => setMood(val)}
         >
-          <SelectTrigger className="w-36 mt-2">
+          <SelectTrigger className="mt-2 w-full">
             <SelectValue placeholder="Mood" />
           </SelectTrigger>
           <SelectContent>
@@ -59,7 +60,7 @@ export default function Mood({
             ))}
           </SelectContent>
         </Select>
-      </div>
+      </label>
     </div>
   );
 }

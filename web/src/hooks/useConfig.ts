@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { URL } from "../constants";
 import type { Config } from "../types";
+import { useToast } from "../components/ui/toast-provider";
 
 export function useConfig(defaultConfig: Config) {
   const [config, setConfig] = useState<Config>(defaultConfig);
+  const { success: toastSuccess, error: toastError } = useToast();
 
   useEffect(() => {
     const getConfig = async () => {
@@ -30,9 +32,17 @@ export function useConfig(defaultConfig: Config) {
 
       const data = await res.json();
       console.log("Saved config:", data);
-      alert("Config saved!");
+      toastSuccess({
+        title: "Configuration saved",
+        description: "Your preset has been stored successfully.",
+      });
     } catch (error) {
       console.log(error);
+      toastError({
+        title: "Failed to save configuration",
+        description:
+          error instanceof Error ? error.message : "Something went wrong.",
+      });
     }
   };
 

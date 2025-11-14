@@ -19,6 +19,7 @@ export default function EnergySection({ config, updateConfig }: Props) {
         name="skip-training-energy"
         value={skip_training_energy}
         setValue={(val) => updateConfig("skip_training_energy", val)}
+        description="Skip the training menu if current energy falls below this value."
       >
         Skip Training Energy
       </EnergyInput>
@@ -26,6 +27,7 @@ export default function EnergySection({ config, updateConfig }: Props) {
         name="never-rest-energy"
         value={never_rest_energy}
         setValue={(val) => updateConfig("never_rest_energy", val)}
+        description="Only allow resting once energy drops under this threshold."
       >
         Never Rest Energy
       </EnergyInput>
@@ -35,6 +37,7 @@ export default function EnergySection({ config, updateConfig }: Props) {
         setValue={(val) =>
           updateConfig("skip_infirmary_unless_missing_energy", val)
         }
+        description="Avoid visiting the infirmary unless energy is missing by at least this amount."
       >
         Skip Infirmary
       </EnergyInput>

@@ -1,4 +1,5 @@
 import { BarChart3 } from "lucide-react";
+import SectionContainer from "../layout/SectionContainer";
 import PriorityStat from "./PriorityStat";
 import PriorityWeights from "./PriorityWeights";
 import PriorityWeight from "./PriorityWeight";
@@ -21,12 +22,13 @@ export default function TrainingSection({ config, updateConfig }: Props) {
   } = config;
 
   return (
-    <div className="bg-card p-6 rounded-xl shadow-lg border border-border/20">
-      <h2 className="text-3xl font-semibold mb-6 flex items-center gap-3">
-        <BarChart3 className="text-primary" />
-        Training
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <SectionContainer
+      icon={BarChart3}
+      title="Training"
+      description="Guide training priorities, risk tolerance, and stat targets throughout the season."
+      contentClassName="flex flex-col gap-8"
+    >
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <PriorityStat
           priorityStat={priority_stat}
           setPriorityStat={(val) => updateConfig("priority_stat", val)}
@@ -50,17 +52,15 @@ export default function TrainingSection({ config, updateConfig }: Props) {
           }
         />
       </div>
-      <div className="mt-8">
-        <StatCaps
-          statCaps={stat_caps}
-          setStatCaps={(key, val) =>
-            updateConfig("stat_caps", {
-              ...stat_caps,
-              [key]: isNaN(val) ? 0 : val,
-            })
-          }
-        />
-      </div>
-    </div>
+      <StatCaps
+        statCaps={stat_caps}
+        setStatCaps={(key, val) =>
+          updateConfig("stat_caps", {
+            ...stat_caps,
+            [key]: isNaN(val) ? 0 : val,
+          })
+        }
+      />
+    </SectionContainer>
   );
 }

@@ -1,4 +1,5 @@
 import Tooltips from "@/components/_c/Tooltips";
+import { fieldCardClass, fieldHintClass, fieldLabelClass } from "@/components/layout/styles";
 import { Input } from "@/components/ui/input";
 
 type Props = {
@@ -8,9 +9,14 @@ type Props = {
 
 export default function WindowName({ windowName, setWindowName }: Props) {
   return (
-    <label htmlFor="window-name" className="flex flex-col gap-2">
-      <div className="flex gap-2 items-center">
-        <span className="text-lg font-medium">Window Name</span>
+    <label htmlFor="window-name" className={fieldCardClass}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          <span className={fieldLabelClass}>Window Name</span>
+          <p className={fieldHintClass}>
+            Match the title of your emulator or game window exactly.
+          </p>
+        </div>
         <Tooltips>
           If you're using an emulator, set this to your emulator's window name
           (case-sensitive).
@@ -18,7 +24,7 @@ export default function WindowName({ windowName, setWindowName }: Props) {
       </div>
       <Input
         id="window-name"
-        className="w-52"
+        className="mt-2 w-full"
         value={windowName}
         onChange={(e) => setWindowName(e.target.value)}
       />

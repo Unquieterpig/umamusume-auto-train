@@ -6,6 +6,7 @@ import type { EventChoicesType, EventData } from "@/types/eventType";
 import type { Config, UpdateConfigType } from "@/types";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import SectionContainer from "../layout/SectionContainer";
 
 type Props = {
   config: Config;
@@ -106,17 +107,19 @@ export default function EventSection({ config, updateConfig }: Props) {
   }, [data]);
 
   return (
-    <div className="bg-card p-6 rounded-xl shadow-lg border border-border/20">
-      <h2 className="text-3xl font-semibold mb-6 flex items-center gap-3">
-        <TicketsIcon className="text-primary" /> Event
-      </h2>
+    <SectionContainer
+      icon={TicketsIcon}
+      title="Event"
+      description="Curate event choices and optimise responses for story encounters."
+      contentClassName="flex flex-col gap-6"
+    >
       <IsOptimalEvent
         isUseOptimalEventChoice={use_optimal_event_choice}
         setIsUseOptimalEventChoice={(val) =>
           updateConfig("event", { ...event, use_optimal_event_choice: val })
         }
       />
-      <div className="flex gap-6 mt-6">
+      <div className="flex flex-col gap-6 xl:flex-row">
         <EventList
           eventChoicesConfig={event_choices}
           addEventList={handleAddEventList}
@@ -135,6 +138,6 @@ export default function EventSection({ config, updateConfig }: Props) {
           }
         />
       </div>
-    </div>
+    </SectionContainer>
   );
 }

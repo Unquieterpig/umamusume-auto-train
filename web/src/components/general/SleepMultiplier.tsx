@@ -1,3 +1,4 @@
+import { fieldCardClass, fieldLabelClass, fieldHintClass } from "@/components/layout/styles";
 import { Input } from "@/components/ui/input";
 
 type Props = {
@@ -10,11 +11,16 @@ export default function SleepMultiplier({
   setSleepMultiplier,
 }: Props) {
   return (
-    <label htmlFor="sleep-multiplier" className="flex flex-col gap-2">
-      <span className="text-lg font-medium">Sleep Time Multiplier</span>
+    <label htmlFor="sleep-multiplier" className={fieldCardClass}>
+      <div className="space-y-1">
+        <span className={fieldLabelClass}>Sleep Time Multiplier</span>
+        <p className={fieldHintClass}>
+          Increase to let the bot rest longer before resuming training.
+        </p>
+      </div>
       <Input
         id="sleep-multiplier"
-        className="w-24"
+        className="mt-2 w-24"
         step={0.1}
         type="number"
         value={sleepMultiplier}

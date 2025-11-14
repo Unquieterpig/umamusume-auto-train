@@ -9,6 +9,8 @@ import type { Config } from "./types";
 
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
+import { cn } from "./lib/utils";
 
 import EventSection from "./components/event/EventSection";
 import RaceScheduleSection from "./components/race-schedule/RaceScheduleSection";
@@ -54,85 +56,73 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground p-4 sm:p-8">
-      <div className="max-w-7xl mx-auto">
-        <header className="p-5 flex items-center justify-between sticky top-0 bg-background z-10">
-          <div>
-            <h1 className="text-5xl font-bold text-primary tracking-tight">
-              Uma Auto Train
-            </h1>
-            <p className="text-muted-foreground mt-2 text-lg">
-              Configure your auto-training settings below.
-            </p>
-          </div>
-          <div className="flex flex-col items-end gap-4">
-            <div className="flex items-center gap-4">
-              <div>
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+        <Card className="border-border/60">
+          <CardHeader>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <CardTitle className="text-2xl font-semibold">
+                Uma Auto Train
+              </CardTitle>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <div>
+                  <Button variant="outline" onClick={openFileDialog}>
+                    Import Config
+                  </Button>
+                  <input
+                    type="file"
+                    accept=".json,application/json"
+                    ref={fileInputRef}
+                    onChange={handleImport}
+                    className="hidden"
+                  />
+                </div>
                 <Button
-                  onClick={openFileDialog}
-                  size={"lg"}
-                  variant={"outline"}
+                  onClick={() => {
+                    savePreset(config);
+                    saveConfig();
+                  }}
                 >
-                  Import Config
+                  Save Configuration
                 </Button>
-                <input
-                  type="file"
-                  accept=".json,application/json"
-                  ref={fileInputRef}
-                  onChange={handleImport}
-                  className="hidden"
-                />
               </div>
-              <Button
-                size={"lg"}
-                className="font-semibold text-lg shadow-lg shadow-primary/20"
-                onClick={() => {
-                  savePreset(config);
-                  saveConfig();
-                }}
-              >
-                Save Configuration
-              </Button>
             </div>
-            <p className="text-muted-foreground">
-              Press <span className="font-bold text-primary">F1</span> to
-              start/stop the bot.
-            </p>
-          </div>
-        </header>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-wrap gap-2">
+              {presets.map((preset, i) => {
+                const isActive = i === activeIndex;
+                return (
+                  <Button
+                    key={preset.name + i}
+                    variant={isActive ? "default" : "outline"}
+                    size="sm"
+                    className={cn(
+                      "rounded-full text-xs font-medium",
+                      !isActive && "border-border/60"
+                    )}
+                    onClick={() => setActiveIndex(i)}
+                  >
+                    Preset {i + 1}
+                  </Button>
+                );
+              })}
+            </div>
+            <Input
+              value={config_name}
+              onChange={(e) => updateConfig("config_name", e.target.value)}
+              placeholder="Preset name"
+            />
+          </CardContent>
+        </Card>
 
-        <div className="flex flex-wrap gap-4 mb-8">
-          {presets.map((_, i) => (
-            <Button
-              key={_.name + i}
-              variant={i === activeIndex ? "default" : "outline"}
-              size="sm"
-              onClick={() => setActiveIndex(i)}
-            >
-              Preset {i + 1}
-            </Button>
-          ))}
-        </div>
-
-        <div className="mb-8">
-          <Input
-            className="w-full sm:w-72 bg-card border-2 border-primary/20 focus:border-primary/50"
-            placeholder="Preset Name"
-            value={config_name}
-            onChange={(e) => updateConfig("config_name", e.target.value)}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mx-2">
-          <div className="lg:col-span-2 flex flex-col gap-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="flex flex-col gap-6 lg:col-span-2">
             <TrainingSection config={config} updateConfig={updateConfig} />
-
             <GeneralSection config={config} updateConfig={updateConfig} />
-
             <RaceStyleSection config={config} updateConfig={updateConfig} />
           </div>
-
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6">
             <SkillSection config={config} updateConfig={updateConfig} />
             <RaceScheduleSection config={config} updateConfig={updateConfig} />
             <EventSection config={config} updateConfig={updateConfig} />

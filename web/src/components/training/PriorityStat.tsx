@@ -1,6 +1,19 @@
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
-import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import Sortable from "../Sortable";
+import { fieldCardClass, fieldLabelClass, fieldHintClass } from "@/components/layout/styles";
+import { cn } from "@/lib/utils";
 
 type Props = {
   priorityStat: string[];
@@ -21,11 +34,23 @@ export default function PriorityStat({ priorityStat, setPriorityStat }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-2 w-fit">
-      <p className="text-lg font-medium">Priority Stat</p>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={priorityStat} strategy={verticalListSortingStrategy}>
-          <ul className="flex flex-col gap-2 w-fit">
+    <div className={cn(fieldCardClass, "w-full gap-3")}>
+      <div>
+        <p className={fieldLabelClass}>Priority Stat</p>
+        <p className={fieldHintClass}>
+          Drag to reorder which stats should be trained first.
+        </p>
+      </div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={priorityStat}
+          strategy={verticalListSortingStrategy}
+        >
+          <ul className="flex flex-col gap-2 rounded-md border border-border/60 bg-card p-2">
             {priorityStat.map((s) => (
               <Sortable key={s} id={s} />
             ))}

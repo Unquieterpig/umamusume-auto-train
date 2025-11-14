@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { fieldCardClass, fieldLabelClass, fieldHintClass } from "@/components/layout/styles";
 
 type Props = {
   maximumFailure: number;
@@ -7,11 +8,16 @@ type Props = {
 
 export default function FailChance({ maximumFailure, setFail }: Props) {
   return (
-    <label htmlFor="fail" className="flex flex-col gap-2">
-      <span className="text-lg font-medium">Max Failure Chance</span>
-      <div className="flex items-center gap-2">
+    <label htmlFor="fail" className={fieldCardClass}>
+      <div className="space-y-1">
+        <span className={fieldLabelClass}>Max Failure Chance</span>
+        <p className={fieldHintClass}>
+          Set the failure percentage cap before skipping risky drills.
+        </p>
+      </div>
+      <div className="mt-2 flex items-center gap-2">
         <Input
-          className="w-24"
+          className="h-10 w-24 rounded-md border-border/60 bg-card"
           type="number"
           name="fail"
           id="fail"
