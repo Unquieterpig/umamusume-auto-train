@@ -11,6 +11,7 @@ import utils.constants as constants
 from utils.log import info, warning, error, debug
 
 from core.execute import career_lobby
+from core.ocr import warm_reader_async
 import core.state as state
 from server.main import app
 from update_config import update_config
@@ -118,5 +119,6 @@ def start_server():
 
 if __name__ == "__main__":
   update_config()
+  warm_reader_async()
   threading.Thread(target=hotkey_listener, daemon=True).start()
   start_server()
