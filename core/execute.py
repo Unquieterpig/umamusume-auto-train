@@ -12,8 +12,7 @@ from core.logic import do_something, decide_race_for_goal
 from utils.log import info, warning, error, debug
 import utils.constants as constants
 
-from core.recognizer import is_btn_active, multi_match_templates
-from utils.scenario import ura
+from core.recognizer import is_btn_active, multi_match_templates, match_template
 from core.skill import buy_skill
 from core.events import event_choice, get_event_name
 
@@ -231,10 +230,11 @@ def select_event():
     click(boxes=(x, confirm_acupuncturist_y, 1, 1), text="Confirm acupuncturist.")
   return True
 
-def race_day():
+def race_day(is_ura = False):
   if state.stop_event.is_set():
     return
-  click(img="assets/buttons/race_day_btn.png", minSearch=get_secs(10), region=constants.SCREEN_BOTTOM_REGION)
+  race_day_btn = f"assets/buttons/{'ura_race_btn' if is_ura else 'race_day_btn'}.png"
+  click(img=race_day_btn, minSearch=get_secs(10), region=constants.SCREEN_BOTTOM_REGION)
 
   click(img="assets/buttons/ok_btn.png")
   sleep(0.5)
@@ -332,8 +332,8 @@ def race_prep():
       click(img="assets/buttons/confirm_btn.png", minSearch=get_secs(2), region=constants.SCREEN_MIDDLE_REGION)
       PREFERRED_POSITION_SET = True
 
-  view_result_btn = pyautogui.locateCenterOnScreen("assets/buttons/view_results.png", confidence=0.8, minSearchTime=get_secs(10), region=constants.SCREEN_BOTTOM_REGION)
-  click("assets/buttons/view_results.png", click=3)
+  if not click("assets/buttons/view_results.png", click=3, text="View results clicked", minSearch=get_secs(5)):
+    debug("View results not found")
   sleep(0.5)
   pyautogui.click()
   sleep(0.1)
@@ -352,7 +352,9 @@ def race_prep():
       sleep(10)
       if not click("assets/buttons/race_exclamation_btn.png", confidence=0.8, minSearch=get_secs(10)):
         info("Couldn't find \"Race!\" button, looking for alternative version.")
-        click("assets/buttons/race_exclamation_btn_portrait.png", confidence=0.8, minSearch=get_secs(10))
+        if not click("assets/buttons/race_exclamation_btn_portrait.png", confidence=0.8, minSearch=get_secs(10)):
+          info("Still no Race button, returning")
+          return
       sleep(0.5)
       skip_btn = pyautogui.locateOnScreen("assets/buttons/skip_btn.png", confidence=0.8, minSearchTime=get_secs(2), region=constants.SCREEN_BOTTOM_REGION)
       skip_btn_big = pyautogui.locateOnScreen("assets/buttons/skip_btn_big.png", confidence=0.8, minSearchTime=get_secs(2), region=constants.SKIP_BTN_BIG_REGION_LANDSCAPE)
@@ -482,28 +484,18 @@ def career_lobby():
     info(f"Criteria: {criteria}")
     print("\n=======================================================================================\n")
 
-    # URA SCENARIO
-    if "Finale" in year and turn == "Race Day":
-      info("URA Finale")
-      if state.IS_AUTO_BUY_SKILL:
-        auto_buy_skill()
-      ura()
-      for i in range(2):
-        if not click(img="assets/buttons/race_btn.png", minSearch=get_secs(2)):
-          click(img="assets/buttons/bluestacks/race_btn.png", minSearch=get_secs(2))
-        sleep(0.5)
-
-      race_prep()
-      sleep(1)
-      after_race()
-      continue
-
     # If calendar is race day, do race
-    if turn == "Race Day" and year != "Finale Season":
-      info("Race Day.")
-      if state.IS_AUTO_BUY_SKILL and year_parts[0] != "Junior":
+    if turn == "Race Day":
+      if state.IS_AUTO_BUY_SKILL and "Junior" not in year:
         auto_buy_skill()
-      race_day()
+
+      if "Finale" in year:
+        info("URA!")
+        race_day(is_ura=True)
+      else:
+        info("Race Day!")
+        race_day(is_ura=False)
+
       continue
 
     # Mood check
